@@ -6,9 +6,9 @@ class PipeMananger
     {
         this.pipes = []
         this.borderSpawn = canvas.width;
-        this.borderDestroy = -500;
-        this.intervalSpawn = 1200;
-        this.maxSpeed = 5;
+        this.borderDestroy = canvas.width * -0.20;
+        this.intervalSpawn = 250;
+        this.maxSpeed = 3;
 
         this.types =
         {
@@ -20,7 +20,6 @@ class PipeMananger
         this.spriteDown = new Image();
 
         this.loadImages();
-        this.create();
     }
 
     loadImages()
@@ -33,9 +32,9 @@ class PipeMananger
     {
         let type = Math.floor( Math.random() * Object.keys( this.types ).length );
         let sprite = this.types.up == type ? this.spriteUp : this.spriteDown;
-        let speed = Math.floor( Math.random() * this.maxSpeed );
-        let width = canvas.width * 0.10;
-        let height = canvas.height * 0.50;
+        let speed = Math.floor( Math.random() * this.maxSpeed ) + 1;
+        let width = canvas.width * 0.05;
+        let height = canvas.height * Math.random();
         let x = this.borderSpawn;
         let y = this.types.up == type ? 0 : canvas.height - height;
         this.pipes.push( new Pipe( type, sprite, speed, width, height, x, y ) );
@@ -56,8 +55,11 @@ class PipeMananger
     checkAndDestroy()
     {
         for ( let i = 0; i < this.pipes.length; i++ )
-           if( this.pipes[i].y <= this.borderDestroy )
+           if( this.pipes[i].x <= this.borderDestroy )
+           {
               this.pipes[i].destroy();
+              this.pipes.splice(i, 1);
+           }
     }
 
     moveAll()

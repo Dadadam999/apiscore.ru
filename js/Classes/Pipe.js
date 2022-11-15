@@ -3,6 +3,7 @@ class Pipe
     constructor(type, sprite, speed, width, height, x, y) // конутруктор класса это стандартная функция которая выполняется когда создается класс через new
     {
         //объявляем свойства класса
+        this.type = type;
         this.sprite = sprite //создаём объект изображения, слово this стандартное для описания класса.
         this.width = width; //ширина спрайта игрока
         this.height = height; //высота спрайта игрока
@@ -13,7 +14,7 @@ class Pipe
 
     move()
     {
-      this.x - this.speed;
+      this.x -= this.speed;
     }
 
     destroy()
