@@ -23,19 +23,24 @@
            <button type="button" name="auth" class="menu_auth">Войти</button>
            <button type="button" name="rank" class="menu_rank">Рейтинг</button>
       </div>
-      <form class="auth" action="" method="post" style="">
-        <div class="auth-wrapper">
-           <label for="login">Логин</label>
-           <input type="text" name="login" value="">
+      <div class="auth fogging">
+        <div class="auth-content">
+          <form class="auth-form" action="" method="post" style="">
+            <div class="auth-wrapper">
+               <label for="login">Логин</label>
+               <input type="text" name="login" value="">
+            </div>
+            <div class="auth-wrapper">
+               <label for="login">Пароль</label>
+               <input type="text" name="pass" value="">
+            </div>
+            <div class="auth-wrapper">
+               <button type="submit" name="submit" class="auth_submit">Войти</button>
+            </div>
+          </form>
         </div>
-        <div class="auth-wrapper">
-           <label for="login">Пароль</label>
-           <input type="text" name="pass" value="">
-        </div>
-        <div class="auth-wrapper">
-           <button type="submit" name="submit" class="auth_submit"></button>
-        </div>
-      </form>
+
+      </div>
       <canvas class="canvas"></canvas>
   </body>
 </html>
