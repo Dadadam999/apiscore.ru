@@ -34,7 +34,7 @@ class PipeMananger
         let sprite = this.types.up == type ? this.spriteUp : this.spriteDown;
         let speed = Math.floor( Math.random() * this.maxSpeed ) + 1;
         let width = canvas.width * 0.05;
-        let height = canvas.height * Math.random();
+        let height = canvas.height * ( Math.random() * ( 0.80 - 0.20 ) + 0.20 );
         let x = this.borderSpawn;
         let y = this.types.up == type ? 0 : canvas.height - height;
         this.pipes.push( new Pipe( type, sprite, speed, width, height, x, y ) );

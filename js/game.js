@@ -35,7 +35,7 @@ function render()
     {
         pipeMananger.pipes[i].move();
 
-        if( pipeMananger.pipes[i].y <= pipeMananger.borderDestroy )
+        if( pipeMananger.pipes[i].x <= pipeMananger.borderDestroy )
         {
            pipeMananger.pipes[i].destroy();
            score.increment();
