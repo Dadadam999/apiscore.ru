@@ -3,8 +3,13 @@
   <head>
     <meta charset="utf-8">
     <title>Flopy Ruble</title>
-    <script defer src="/js/classes/player.js" charset="utf-8"></script>
-    <script defer src="/js/game.js" charset="utf-8"></script>
+    <script defer src="/js/classes/Scene.js" charset="utf-8"></script>
+    <script defer src="/js/classes/Player.js" charset="utf-8"></script>
+    <script defer src="/js/classes/Pipe.js" charset="utf-8"></script>
+    <script defer src="/js/classes/PipeMananger.js" charset="utf-8"></script>
+    <script defer src="/js/classes/ScoreController.js" charset="utf-8"></script>
+    <script defer src="/js/Game.js" charset="utf-8"></script>
+    <script defer src="/js/UI.js" charset="utf-8"></script>
     <script type="text/javascript">
         const sessionId = 0;
         const userSid = '';
@@ -12,7 +17,7 @@
     <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
-      <div class="score"></div>
+      <div class="score">Счет: 0</div>
       <div class="menu">
            <button type="button" name="start" class="menu_start">Начать игру</button>
            <button type="button" name="auth" class="menu_auth">Войти</button>
