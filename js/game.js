@@ -1,13 +1,16 @@
-const scoreLabel = document.querySelector(".score");
-const canvas = document.querySelector(".canvas");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
 const ctx = canvas.getContext('2d');
 const scene = new Scene();
 const player = new Player(canvas.height * 0.10, canvas.height * 0.10); //объявляем пустую переменную игрока
 const pipeMananger = new PipeMananger(canvas);
 const score = new ScoreController();
+const gameStates = {
+    'play' : 0,
+    'pause' : 1,
+    'win' : 2,
+    'over' : 3
+};
+
+let gameState = gameStates['pause'];
 
 window.addEventListener("load", function()
 {
@@ -15,9 +18,10 @@ window.addEventListener("load", function()
      render();
 });
 
-document.onclick = function(e)
+document.onkeydown = function(e)
 {
-    player.jump();
+    if( e.keyCode == 38 ) // 40:down; 37:left; 39:right; 46:delete;
+        player.jump();
 }
 
 // рисуем на экране обекты
@@ -51,5 +55,6 @@ function render()
         );
     }
 
-    requestAnimationFrame(render);
+    if( gameState == gameStates.play )
+        requestAnimationFrame(render);
 }
