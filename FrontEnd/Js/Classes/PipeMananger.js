@@ -24,8 +24,8 @@ class PipeMananger
 
     loadImages()
     {
-      this.spriteUp.src = "sprite/pipeW.png";
-      this.spriteDown.src = "sprite/pipel.png";
+        this.spriteUp.src = "FrontEnd/Sprite/PipeUp.png";
+        this.spriteDown.src = "FrontEnd/Sprite/PipeDown.png";
     }
 
     create()
@@ -64,7 +64,7 @@ class PipeMananger
 
     moveAll()
     {
-        for ( let i = 0; i < this.pipes.length; i++ )
-              this.pipes[i].move();
+          for ( let i = 0; i < this.pipes.length; i++ )
+                this.pipes[i].move();
     }
 }

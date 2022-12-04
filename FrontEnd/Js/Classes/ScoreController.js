@@ -13,5 +13,5 @@ class ScoreController
     render()
     {
       return "Счет: " + this.counter;
-    }    
+    }
 }

@@ -1,6 +1,6 @@
-class Collision
+class Player
 {
-    constructor(object) // конутруктор класса это стандартная функция которая выполняется когда создается класс через new
+    constructor(width, height) // конутруктор класса это стандартная функция которая выполняется когда создается класс через new
     {
         //объявляем свойства класса
         this.sprite = new Image(); //создаём объект изображения, слово this стандартное для описания класса.
@@ -16,16 +16,16 @@ class Collision
 
     loadImage() //функция загрузки изображения
     {
-      this.sprite.src = "sprite/bird.png"; //приравниваем объекту изображения путь спрайта
+        this.sprite.src = "FrontEnd/Sprite/bird.png"; //приравниваем объекту изображения путь спрайта
     }
 
     fall() //функция снижения персонажа под гравитацией
     {
-       this.y += this.weight;
+        this.y += this.weight;
     }
 
     jump() //функция прыжка персонажа вверх
     {
-       this.y -= this.jumpForce;
+        this.y -= this.jumpForce;
     }
 }

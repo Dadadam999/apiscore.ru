@@ -14,7 +14,7 @@ let gameState = gameStates['pause'];
 
 window.addEventListener("load", function()
 {
-     scene.setBackground("sprite/bg.png");
+     scene.setBackground("FrontEnd/Sprite/bg.png");
      render();
 });
 
