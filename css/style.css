@@ -67,7 +67,7 @@ label {
       z-index: 999;
 }
 
-form {
+.popup {
       display: flex;
       flex-direction: column;
       flex-wrap: nowrap;

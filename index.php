@@ -18,12 +18,29 @@
   </head>
   <body>
       <div class="score">Счет: 0</div>
+
+      <div class="rating block fogging">
+        <div class="content">
+          <div class="popup">
+             <div class="wrapper">
+                <span class="rating-label">
+                    Ваш рейтинг
+                </span>
+             </div>
+             <div class="wrapper">
+                <button type="button" name="exit-rank" class="exit-rank">Вернутся</button>
+             </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
       <div class="main-menu block fogging">
         <div class="content">
-          <form class="menu">
+          <form class="popup">
              <div class="wrapper">
-             <button type="button" name="start" class="start-game">Начать игру</button>
-                </div>
+                <button type="button" name="start" class="start-game">Начать игру</button>
+             </div>
              <div class="wrapper">
                 <button type="button" name="auth" class="open-auth">Войти</button>
              </div>
@@ -35,7 +52,7 @@
       </div>
       <div class="auth-form block fogging">
         <div class="content">
-          <form action="" method="post">
+          <form class="popup" method="post">
             <div class="wrapper">
                <label for="login">Логин</label>
                <input type="text" name="login" value="">
