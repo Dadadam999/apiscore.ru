@@ -9,7 +9,6 @@ class DataBase
      public function __construct()
      {
         $this->connection = new \PDO( 'mysql:host=' . DB_SERVER . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD );
-        $this->setTables();
      }
 
      public function fetch( $query )
