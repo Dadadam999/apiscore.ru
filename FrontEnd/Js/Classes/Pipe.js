@@ -10,15 +10,17 @@ class Pipe
         this.x = x; //позиция игрока по ширине
         this.y = y; //позиция игрока по высоте
         this.speed = speed;
+        this.collisionBox = new CollisionBox( this.x, this.y, this.width, this.height );
     }
 
     move()
     {
-      this.x -= this.speed;
+        this.x -= this.speed;
+        this.collisionBox.setPosition( this.x, this.y );
     }
 
     destroy()
     {
-      delete this;
+        delete this;
     }
 }

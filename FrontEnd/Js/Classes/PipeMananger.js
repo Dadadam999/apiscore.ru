@@ -4,9 +4,10 @@ class PipeMananger
 
     constructor(canvas) // конутруктор класса это стандартная функция которая выполняется когда создается класс через new
     {
+        this.canvas = canvas;
         this.pipes = []
-        this.borderSpawn = canvas.width;
-        this.borderDestroy = canvas.width * -0.20;
+        this.borderSpawn = this.canvas.width;
+        this.borderDestroy = this.canvas.width * -0.20;
         this.intervalSpawn = 250;
         this.maxSpeed = 3;
 
@@ -33,10 +34,10 @@ class PipeMananger
         let type = Math.floor( Math.random() * Object.keys( this.types ).length );
         let sprite = this.types.up == type ? this.spriteUp : this.spriteDown;
         let speed = Math.floor( Math.random() * this.maxSpeed ) + 1;
-        let width = canvas.width * 0.05;
-        let height = canvas.height * ( Math.random() * ( 0.80 - 0.20 ) + 0.20 );
+        let width = this.canvas.width * 0.05;
+        let height = this.canvas.height * ( Math.random() * ( 0.80 - 0.20 ) + 0.20 );
         let x = this.borderSpawn;
-        let y = this.types.up == type ? 0 : canvas.height - height;
+        let y = this.types.up == type ? 0 : this.canvas.height - height;
         this.pipes.push( new Pipe( type, sprite, speed, width, height, x, y ) );
     }
 

@@ -11,6 +11,7 @@ class Player
         this.weight = 2; // гравитация игрока
         this.hp = 2; // жизни игрока
         this.jumpForce = 30; //сила с которой игрок прыгает вверх
+        this.collisionBox = new CollisionBox( this.x, this.y, this.width, this.height );
         this.loadImage(); //загружем путь в объект изображения
     }
 
@@ -22,10 +23,12 @@ class Player
     fall() //функция снижения персонажа под гравитацией
     {
         this.y += this.weight;
+        this.collisionBox.setPosition( this.x, this.y );
     }
 
     jump() //функция прыжка персонажа вверх
     {
         this.y -= this.jumpForce;
+        this.collisionBox.setPosition( this.x, this.y );
     }
 }
