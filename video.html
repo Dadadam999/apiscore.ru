@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Тест видео</title>
+    <script type="text/javascript">
+      window.addEventListener("load", function()
+      {
+          const video = document.querySelector('video');
+          const captureButton = document.querySelector('button');
+          const cameraSelect = document.querySelector('select');
+
+          navigator.mediaDevices.enumerateDevices()
+            .then((devices) => {
+              let videoDevices = devices.filter(device => device.kind === 'videoinput');
+              if (videoDevices.length > 1) {
+                videoDevices.forEach((device) => {
+                  const option = document.createElement('option');
+                  option.value = device.deviceId;
+                  option.text = device.label || `Camera ${cameraSelect.length + 1}`;
+                  cameraSelect.appendChild(option);
+                });
+                cameraSelect.onchange = () => {
+                  const selectedDeviceId = cameraSelect.value;
+                  const constraints = { video: { deviceId: selectedDeviceId } };
+                  startCamera(constraints);
+                };
+              }
+            })
+            .catch((err) => {
+              console.error('Error accessing media devices', err);
+            });
+
+          const startCamera = (constraints) => {
+            navigator.mediaDevices.getUserMedia(constraints)
+              .then((stream) => {
+                video.srcObject = stream;
+                video.play();
+              })
+              .catch((err) => {
+                console.error('Error accessing media devices', err);
+              });
+          };
+
+          captureButton.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgUrl = canvas.toDataURL('image/png');
+            // отправить imgUrl на сервер или использовать для отображения на странице
+          });
+
+          // start with default camera
+          startCamera({ video: true });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <video></video>
+      <button>Сделать фото</button>
+      <select></select>
+    </div>
+  </body>
+</html>
+
+
+<script type="text/javascript">
+fileEntry.file( async function( file ) 
+{
+  let formData = new FormData();
+  formData.append('file', file);
+
+  await fetch('upload.php',
+  {
+    method: 'POST',
+    body: formData
+  }).then(function(response)
+  {
+    console.log('ok');
+  }).catch(function(error)
+  {
+    console.log(error);
+  });
+});
+</script>
