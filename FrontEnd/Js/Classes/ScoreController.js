@@ -15,7 +15,7 @@ class ScoreController
         return "Счет: " + this.counter;
     }
 
-    sendScore()
+    async sendScore()
     {
       let request = await fetch(
           '/BackEnd/Api/Score/Set/', //сюда путь до принимающего php скрипта
@@ -27,6 +27,8 @@ class ScoreController
       );
 
       if (request.ok)
+      {
         // запрос прошёл.
+      }
     }
 }

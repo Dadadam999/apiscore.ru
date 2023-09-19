@@ -1,138 +1,103 @@
 <?php
+
 namespace Flopy;
+
+use PDO;
+use Exception;
+use PDOException;
 
 class DataBase
 {
-     private $connection;
-     private $tables = array();
+    private static PDO $connection;
 
-     public function __construct()
-     {
-        $this->connection = new \PDO( 'mysql:host=' . DB_SERVER . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD );
-     }
+    public static function init(string $db_server, string  $db_name, string  $db_user, string  $db_password)
+    {
+        $this->connection = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_name, $db_user, $db_password);
+        $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
 
-     public function fetch( $query )
-     {
-        $result = $this->connection->prepare( $query );
-
-        try
-        {
-            $result->execute();
+    public static function fetch(string $query, array $params = []): array
+    {
+        try {
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new PDOException("DB Error: " . $e->getMessage());
         }
-        catch (\PDOException $e)
-        {
-          return '';
+    }
+
+    public static function tableExists(string $name): bool
+    {
+        $result = $this->fetch("SHOW TABLES LIKE :name", ['name' => $name]);
+        return !empty($result);
+    }
+
+    public static function columnExistsInTable(string $table, string $columnName): bool
+    {
+        $result = $this->fetch("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = :dbname AND TABLE_NAME = :table AND COLUMN_NAME = :column", [
+            'dbname' => DB_NAME,
+            'table' => $table,
+            'column' => $columnName
+        ]);
+        return !empty($result);
+    }
+
+    public static function insert(string $table, array $data): void
+    {
+        $columns = array_keys($data);
+        $values = ':' . implode(', :', $columns);
+        $sql = "INSERT INTO `$table` (" . implode(', ', $columns) . ") VALUES ($values)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute($data);
+    }
+
+    public static function update(string $table, array $data, string $where): void
+    {
+        $set = '';
+        foreach ($data as $key => $value) {
+            $set .= "`$key` = :$key, ";
+        }
+        $set = rtrim($set, ", ");
+        $sql = "UPDATE `$table` SET $set WHERE $where";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute($data);
+    }
+
+    public static function delete(string $table, string $where): void
+    {
+        $sql = "DELETE FROM `$table` WHERE $where";
+        $this->connection->exec($sql);
+    }
+
+    public static function createTable(string $name, array $columns): void
+    {
+        if (empty($name) || !is_array($columns)) {
+            throw new Exception('Invalid table name or columns provided.');
         }
 
-        if ( $result )
-          return $result->fetchAll( \PDO::FETCH_ASSOC );
+        $columnsList = [];
+        foreach ($columns as $columnName => $type) {
+            if (!is_string($columnName) || !is_string($type)) {
+                throw new Exception('Invalid column name or type provided.');
+            }
 
-        return '';
-     }
-
-     private function setTables()
-     {
-        $tableNames = $this->fetch('SHOW TABLES')[0];
-
-        foreach ( $tableNames as $tableName )
-        {
-            $columnResult = $this->fetch( "SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_NAME . "' AND TABLE_NAME = '" . $tableName . "'" );
-
-            foreach( $columnResult as $columnName )
-                array_push( $this->tables, [ 'name' => $tableName , 'columns' => $columnName['COLUMN_NAME'] ] );
+            $columnsList[] = "`$columnName` $type";
         }
-     }
 
-     public function issetTable( $name )
-     {
-        foreach ( $this->tables as $table )
-           if ( $table['name'] === $name )
-              return true;
+        $sql = "CREATE TABLE `$name` (" . implode(", ", $columnsList) . ")";
+        $this->connection->exec($sql);
+    }
 
-        return false;
-     }
+    public static function addColumn(string $table, string $columnName, string $type): void
+    {
+        $sql = "ALTER TABLE `$table` ADD `$columnName` $type";
+        $this->connection->exec($sql);
+    }
 
-     public function issetColumnTable( $tableName, $columnName )
-     {
-       foreach ( $this->tables as $table )
-          if ( $table['name'] === $tableName && $table['columns'] === $columnName )
-             return true;
-
-       return false;
-     }
-
-     public function issetTableFetch( $name )
-     {
-        $result = $this->fetch( "SHOW TABLES FROM " . DB_NAME . " LIKE '" .$name . "'" );
-        return !empty( $result );
-     }
-
-     public function issetColumnTableFetch( $table, $columnName )
-     {
-        $result = $this->fetch( "SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_NAME . "' AND TABLE_NAME = '" . $table . "' AND COLUMN_NAME = '" . $columnName . "'" );
-        return !empty( $result );
-     }
-
-     public function getTables()
-     {
-        return $this->tables;
-     }
-
-     public function insert( $table, $valuesColumns )
-     {
-        $sql= "INSERT INTO `" . $table . "` SET ";
-
-        foreach ( $valuesColumns as $columns => $value )
-            $sql .= "`" . $columns . "` = :" . $columns . ", ";
-
-        $sql = substr($sql, 0, -2);
-        $sql .= ' ';
-
-        $result = $this->connection->prepare( $sql );
-        $result->execute( $valuesColumns );
-     }
-
-     public function update( $table, $valuesColumns, $where )
-     {
-         $sql= "UPDATE `" . $table . "` SET ";
-
-         foreach ( $valuesColumns as $columns => $value )
-              $sql .= "`" . $columns . "` = :" . $columns . ", ";
-
-         $sql = substr($sql, 0, -2);
-         $sql .= " WHERE " . $where;
-         $result = $this->connection->prepare( $sql );
-         $result->execute( $valuesColumns );
-     }
-
-     public function delete( $table, $where )
-     {
-         $this->connection->exec( "DELETE FROM `" . $table . "` WHERE " . $where );
-     }
-
-     public function createTable( $name, $columns )
-     {
-        $sql = 'CREATE TABLE ' . $name;
-        $sql .= '(';
-
-        foreach ( $columns as $name => $attribute )
-             $sql .= $name . ' ' . $attribute . ', ';
-
-        $sql = substr($sql, 0, -2);
-        $sql .= ')';
-        $this->connection->prepare( $sql )->execute();
-     }
-
-     public function addColumn( $table, $column )
-     {
-        $sql = 'ALTER TABLE ' . $table . ' ADD ' . $column;
-        $this->connection->prepare( $sql )->execute();
-     }
-
-     public function addPrimaryColumn( $table, $columnName )
-     {
-        $sql = 'ALTER TABLE ' . $table . 'ADD PRIMARY KEY (' . $columnName . ')';
-        $this->connection->prepare( $sql )->execute();
-     }
+    public static function addPrimaryColumn(string $table, string $columnName): void
+    {
+        $sql = "ALTER TABLE `$table` ADD PRIMARY KEY (`$columnName`)";
+        $this->connection->exec($sql);
+    }
 }
-?>

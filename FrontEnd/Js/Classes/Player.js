@@ -8,7 +8,7 @@ class Player
         this.height = height; //высота спрайта игрока
         this.x = 10; //позиция игрока по ширине
         this.y = 0; //позиция игрока по высоте
-        this.weight = 2; // гравитация игрока
+        this.weight = 1; // гравитация игрока
         this.hp = 2; // жизни игрока
         this.jumpForce = 30; //сила с которой игрок прыгает вверх
         this.collisionBox = new CollisionBox( this.x, this.y, this.width, this.height );
